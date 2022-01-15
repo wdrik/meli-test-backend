@@ -3,7 +3,7 @@ import { api } from './services/api';
 
 const router = Router();
 
-interface Item {
+type Item = {
   id: string;
   title: string;
   price: {
@@ -16,20 +16,20 @@ interface Item {
   free_shipping: string;
   sold_quantity?: number;
   description?: string;
-}
+};
 
-interface Author {
+type Author = {
   name: string;
   lastname: string;
-}
+};
 
-interface Products {
+interface IProducts {
   author: Author;
   categories: string[];
   items: Item[];
 }
 
-interface ProductDetail {
+interface IProductDetail {
   author: Author;
   item: Item;
 }
@@ -38,9 +38,9 @@ router.get('/api/items', async (req, res) => {
   try {
     const response = await api.get(`sites/MLA/search?q=${req.query.q}`);
 
-    const items = response.data.results.slice(0, 1);
+    const items = response.data.results.slice(0, 4);
 
-    const products: Products = {
+    const products: IProducts = {
       author: {
         name: '',
         lastname: '',
@@ -77,7 +77,7 @@ router.get('/api/items/:id', async (req, res) => {
     const itemData = await api.get(`items/${req.params.id}`);
     const descriptionData = await api.get(`items/${req.params.id}/description`);
 
-    const product: ProductDetail = {
+    const product: IProductDetail = {
       author: {
         name: '',
         lastname: '',
