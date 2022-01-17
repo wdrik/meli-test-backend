@@ -16,6 +16,7 @@ type Item = {
   free_shipping: string;
   sold_quantity?: number;
   description?: string;
+  seller_address_city?: string;
 };
 
 type Author = {
@@ -40,7 +41,7 @@ router.get('/api/items', async (req, res) => {
 
     const items = response.data.results.slice(0, 4);
 
-    const products: IProducts = {
+    let products: IProducts = {
       author: {
         name: '',
         lastname: '',
@@ -61,12 +62,13 @@ router.get('/api/items', async (req, res) => {
         picture: item.thumbnail,
         condition: item.condition,
         free_shipping: item.shipping.free_shipping,
+        seller_address_city: item.seller_address.city.name,
       });
     });
 
-    return res.status(200).json(items);
+    return res.status(200).json(products);
   } catch (err) {
-    return res.status(500);
+    return res.status(500).json({ error: 'Error' });
   }
 });
 
@@ -88,9 +90,9 @@ router.get('/api/items/:id', async (req, res) => {
         price: {
           currency: itemData.data.currency_id,
           amount: itemData.data.price,
-          decimals: 0,
+          decimals: 2,
         },
-        picture: itemData.data.thumbnail,
+        picture: itemData.data.pictures[0].url,
         condition: itemData.data.condition,
         free_shipping: itemData.data.shipping.free_shipping,
         sold_quantity: 0,
@@ -100,7 +102,7 @@ router.get('/api/items/:id', async (req, res) => {
 
     return res.status(200).json(product);
   } catch (err) {
-    return res.status(500);
+    return res.status(500).json({ error: 'Error' });
   }
 });
 
