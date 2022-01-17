@@ -73,8 +73,6 @@ router.get('/api/items', async (req, res) => {
 });
 
 router.get('/api/items/:id', async (req, res) => {
-  console.log(req.params.id);
-
   try {
     const itemData = await api.get(`items/${req.params.id}`);
     const descriptionData = await api.get(`items/${req.params.id}/description`);
